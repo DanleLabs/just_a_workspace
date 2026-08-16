@@ -17,6 +17,7 @@ export const Colors = {
   },
   dark: {
     text: '#ffffff',
+    accent: '#2299f2',
     background: '#000000',
     backgroundElement: '#212225',
     backgroundSelected: '#2E3135',
@@ -62,4 +63,12 @@ export const Spacing = {
 } as const;
 
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
+
+export const FloatingTabBar = {
+  height: 56,
+  bottomOffset: 20,
+  maxWidth: 290,
+} as const;
+
+export const FloatingTabBarInset = FloatingTabBar.height + FloatingTabBar.bottomOffset;
 export const MaxContentWidth = 800;

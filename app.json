@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "jarvis_app",
-    "slug": "jarvis_app",
+    "name": "just_a_workspace",
+    "slug": "jaw",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "jarvisapp",
+    "scheme": "jaw",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
@@ -17,7 +17,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.jaw"
     },
     "web": {
       "output": "static",

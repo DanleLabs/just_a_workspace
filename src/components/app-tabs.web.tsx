@@ -8,11 +8,14 @@ import {
 } from 'expo-router/ui';
 import { SymbolView } from 'expo-symbols';
 import { Pressable, useColorScheme, View, StyleSheet } from 'react-native';
+import type { LucideIcon } from 'lucide-react-native';
+import type { Href } from 'expo-router';
 
 import { ExternalLink } from './external-link';
 import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
 
+import { NAVIGATION } from '@/constants/data/navigation.data';
 import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
 
 export default function AppTabs() {
@@ -21,26 +24,43 @@ export default function AppTabs() {
       <TabSlot style={{ height: '100%' }} />
       <TabList asChild>
         <CustomTabList>
-          <TabTrigger name="home" href="/" asChild>
-            <TabButton>Home</TabButton>
-          </TabTrigger>
-          <TabTrigger name="explore" href="/explore" asChild>
-            <TabButton>Explore</TabButton>
-          </TabTrigger>
+          {NAVIGATION.map((item) => (
+            <TabTrigger
+              key={item.name}
+              name={item.name}
+              href={(item.name === 'index' ? '/' : `/${item.name}`) as Href}
+              asChild
+            >
+              <TabButton label={item.title} icon={item.icon} />
+            </TabTrigger>
+          ))}
         </CustomTabList>
       </TabList>
     </Tabs>
   );
 }
 
-export function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps) {
+export function TabButton({
+  isFocused,
+  icon: IconComponent,
+  label,
+  ...props
+}: TabTriggerSlotProps & { label: string; icon: LucideIcon }) {
+  const scheme = useColorScheme();
+  const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
+
   return (
     <Pressable {...props} style={({ pressed }) => pressed && styles.pressed}>
       <ThemedView
         type={isFocused ? 'backgroundSelected' : 'backgroundElement'}
         style={styles.tabButtonView}>
+        <IconComponent
+          size={14}
+          color={isFocused ? colors.text : colors.textSecondary}
+          strokeWidth={1.75}
+        />
         <ThemedText type="small" themeColor={isFocused ? 'text' : 'textSecondary'}>
-          {children}
+          {label}
         </ThemedText>
       </ThemedView>
     </Pressable>
@@ -104,6 +124,9 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.one,
     paddingHorizontal: Spacing.three,
     borderRadius: Spacing.three,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
   },
   externalPressable: {
     flexDirection: 'row',
