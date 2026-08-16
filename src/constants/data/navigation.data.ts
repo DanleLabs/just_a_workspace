@@ -7,10 +7,10 @@ export interface INavigation {
 }
 
 export const NAVIGATION: INavigation[] = [
-  {
+{
     title: 'Study',
     icon: BookOpenText,
-    name: 'index',
+    name: 'study'
   },
   {
     title: 'Todo',
