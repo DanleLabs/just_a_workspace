@@ -8,3 +8,4 @@ export const taskDataAtom = atom<ITaskData[]>([
   { taskText: "Fix payment bug", isDone: false, priority: TaskPriority.HIGH, id: '4'  },
   { taskText: "Clean up unused imports", isDone: true, priority: TaskPriority.LOW, id: '5'  },
 ])
+export const workspacePopupAtom = atom<boolean>(false)

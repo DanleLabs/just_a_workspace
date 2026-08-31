@@ -9,22 +9,27 @@ import { useRef, useState } from 'react';
 import { IPopupMenu, PopupPosition } from '@/types/popupMenu.type';
 import { NAVIGATION } from '@/constants/data/navigation.data';
 import { Theme } from '@/constants/theme';
+import { useAtom } from 'jotai';
+import { workspacePopupAtom } from '@/state/state';
 
 export default function TabsLayout() {
 
   const testRef = useRef<View>(null)
+
+  const [isOpen, setIsOpen] = useAtom(workspacePopupAtom)
 
   const [popupMenuArgs, setPopupMenuArgs] = useState<IPopupMenu>({
     elementRef: null,
     height: 200,
     isOpen: false,
     items: WORKSPACE_POPUP,
-    position: PopupPosition.BOTTOM
+    position: PopupPosition.BOTTOM,
+    setIsOpen: setIsOpen,
   })
 
   return (
     <View ref={testRef} style={styles.container}>
-      <PopupMenu elementRef={popupMenuArgs.elementRef} height={popupMenuArgs.height} isOpen={popupMenuArgs.isOpen} items={popupMenuArgs.items} position={popupMenuArgs.position} />
+      <PopupMenu setIsOpen={setIsOpen} elementRef={popupMenuArgs.elementRef} height={popupMenuArgs.height} isOpen={isOpen} items={popupMenuArgs.items} position={popupMenuArgs.position} />
       <Header setPopupArgs={
         setPopupMenuArgs
       }></Header>

@@ -14,4 +14,5 @@ export interface IPopupMenu {
   width?: number,
   elementRef: React.Ref<any>
   position: PopupPosition
+  setIsOpen: (prev: boolean) => void
 }

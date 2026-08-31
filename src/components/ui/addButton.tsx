@@ -5,7 +5,7 @@ import { Pressable, StyleSheet } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 
 interface IAddButton extends PropsWithChildren {
-  onPress: () => {},
+  onPress: () => void,
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);

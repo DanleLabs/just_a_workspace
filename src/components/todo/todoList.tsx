@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAtom, useAtomValue } from "jotai";
 import { taskDataAtom } from "@/state/state";
 import { ITaskData } from "@/types/todoItem.type";
+import { Theme } from "@/constants/theme";
 
 
 export function TodoList({taskData}: {taskData: ITaskData[]}) {
@@ -11,7 +12,9 @@ export function TodoList({taskData}: {taskData: ITaskData[]}) {
   const data = useAtomValue(taskDataAtom)
 
   return (
-    <View>
+    <View style={{
+      gap: Theme.Spacing.md
+    }}>
       {
         data.map((item, i) => {
           return (

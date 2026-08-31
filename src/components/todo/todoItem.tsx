@@ -12,8 +12,7 @@ export default function TodoItem({ taskText, isDone, id, priority   }: ITaskData
 
   return (
     <View style={styles.todoItem}>
-      <CheckBox isChecked={isDone} onChange={() => {
-          console.log('[tap]', id);
+      <CheckBox size={Theme.Icons.sizeMd + Theme.Spacing.sm} isChecked={isDone} onChange={() => {
           setData((prev) =>
             prev.map((item) => (item.id === id ? { ...item, isDone: !item.isDone } : item)),
           )
@@ -25,9 +24,9 @@ export default function TodoItem({ taskText, isDone, id, priority   }: ITaskData
 
 const styles = StyleSheet.create({
   todoItem: {
-    marginBottom: Theme.Spacing.md,
     flexDirection: "row",
-    gap: Theme.Spacing.sm,
+    gap: Theme.Spacing.md,
+    alignItems: 'center',
   },
   text: {
     color: Theme.Colors.contrast,

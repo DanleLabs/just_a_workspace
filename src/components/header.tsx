@@ -7,6 +7,8 @@ import PopupMenu from "./ui/popupMenu";
 import { WORKSPACE_POPUP } from "@/mock-data/popup.data";
 import { IPopupMenu, PopupPosition } from "@/types/popupMenu.type";
 import SwitchMenu from "./ui/switchMenu";
+import { workspacePopupAtom } from "@/state/state";
+import { useAtom } from "jotai";
 
 const AnimatedView = Animated.createAnimatedComponent(View)
 
@@ -14,7 +16,7 @@ export default function Header({setPopupArgs}: {setPopupArgs: Dispatch<SetStateA
 
   const elementRef = useRef(null)
 
-  const [isOpenMenu, setIsOpenMenu] = useState(false)
+  const [isOpenMenu, setIsOpenMenu] = useAtom(workspacePopupAtom)
 
   const rotation = useSharedValue(0)
   const animatedStyle = useAnimatedStyle(() => ({
@@ -22,7 +24,7 @@ export default function Header({setPopupArgs}: {setPopupArgs: Dispatch<SetStateA
   }))
 
   const handlePress = () => {
-    setIsOpenMenu(!isOpenMenu)
+    setIsOpenMenu(prev => !prev)
   }
 
   useEffect(() => {
@@ -55,7 +57,18 @@ export default function Header({setPopupArgs}: {setPopupArgs: Dispatch<SetStateA
         </Pressable>
         <UserRound color={Theme.Colors.textPrimary} size={Theme.Icons.sizeMd} strokeWidth={Theme.Icons.strokeWidth} />
       </View>
-      <SwitchMenu />
+      <SwitchMenu items={[
+        {
+          title: 'Todo',
+          url: 'todo',
+          id:'1',
+        },
+        {
+          title: 'Calendar',
+          url: 'calendar-view',
+          id: '2',
+        },
+      ]} />
     </View>
   )
 }

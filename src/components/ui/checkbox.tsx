@@ -6,12 +6,13 @@ interface ICheckBox {
   isChecked: boolean
   onChange: () => void
   Icon?: LucideIcon
+  size?: number
 }
 
-export default function CheckBox({ isChecked, onChange, Icon = Check }: ICheckBox) {
+export default function CheckBox({ isChecked, onChange, Icon = Check, size = 24, }: ICheckBox) {
   return (
-    <Pressable style={styles.box} onPress={() => onChange()}>
-      {isChecked && <Icon color={Theme.Colors.textPrimary} size={Theme.Icons.sizeMd} />}
+    <Pressable style={[styles.box, {width: size, height: size, borderColor: isChecked ? Theme.Colors.accent : Theme.Colors.textSecondary,}]} onPress={() => onChange()}>
+      {isChecked && <Icon color={Theme.Colors.accent} size={Theme.Icons.sizeMd} />}
     </Pressable>
   )
 }
@@ -19,9 +20,8 @@ export default function CheckBox({ isChecked, onChange, Icon = Check }: ICheckBo
 const styles = StyleSheet.create({
   box: {
     borderRadius: Theme.Radii.full,
-    borderColor: Theme.Colors.accentMuted,
-    borderWidth: 1,
-    height: Theme.Icons.sizeMd + Theme.Spacing.sm,
-    width: Theme.Icons.sizeMd + Theme.Spacing.sm,
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 })
