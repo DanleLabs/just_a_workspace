@@ -27,22 +27,26 @@ export default function PopupMenu({
 }: IPopupMenu) {
 
   const animatedOpacity = useSharedValue(0);
-  const animatedTranslateY = useSharedValue(0)
+  const animatedTranslateY = useSharedValue(0);
+  const display = useSharedValue<"none" | "flex" | "contents" | undefined>('none')
 
   const popupAnimatedStyles = useAnimatedStyle(() => ({
     opacity: animatedOpacity.value,
-    transform: [{translateY: animatedTranslateY.value}]
+    transform: [{ translateY: animatedTranslateY.value }],
+    display: display.value
   }));
 
   const isScrollbar = items.length > 4
 
   useEffect(() => {
     if (isOpen) {
+      display.value = 'flex'
       animatedTranslateY.value = withTiming(0, {duration: 180})
       animatedOpacity.value = withTiming(1, { duration: 180 });
     } else {
       animatedTranslateY.value = withTiming(-10, { duration: 120 });
       animatedOpacity.value = withTiming(0, { duration: 120 });
+      setTimeout(() => {display.value = 'none'}, 120)
     }
   }, [isOpen]);
 
