@@ -7,11 +7,6 @@ export interface INavigation {
 }
 
 export const NAVIGATION: INavigation[] = [
-{
-    title: 'Study',
-    icon: BookOpenText,
-    name: 'study'
-  },
   {
     title: 'Todo',
     icon: CalendarCheck,
@@ -26,5 +21,10 @@ export const NAVIGATION: INavigation[] = [
     title: 'Notes',
     icon: SquarePen,
     name: 'notes'
+  },
+  {
+    title: 'Study',
+    icon: BookOpenText,
+    name: 'study'
   },
 ]
