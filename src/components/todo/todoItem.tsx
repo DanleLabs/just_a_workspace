@@ -8,7 +8,7 @@ import { taskDataAtom } from "@/state/state";
 
 export default function TodoItem({ taskText, isDone, id, priority   }: ITaskData) {
 
-  const [data, setData] = useAtom(taskDataAtom)
+  const [, setData] = useAtom(taskDataAtom)
 
   return (
     <View style={styles.todoItem}>
@@ -24,14 +24,14 @@ export default function TodoItem({ taskText, isDone, id, priority   }: ITaskData
 
 const styles = StyleSheet.create({
   todoItem: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: Theme.Spacing.md,
     alignItems: 'center',
   },
   text: {
     color: Theme.Colors.contrast,
-    fontSize: Theme.Typography.sizes.md.fontSize,
-    lineHeight: Theme.Typography.sizes.md.lineHeight,
+    fontSize: Theme.Typography.sizes.lg.fontSize,
+    lineHeight: Theme.Typography.sizes.lg.lineHeight,
     fontFamily: Theme.Typography.families.regular,
   }
 })

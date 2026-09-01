@@ -3,7 +3,7 @@ import { FloatingTabBarInset, Theme } from '@/constants/theme';
 
 export default function NotesScreen() {
   return (
-    <View style={{ flex: 1, paddingBottom: FloatingTabBarInset + Theme.Spacing.md, justifyContent: "center", alignItems: "center" }}>
+    <View style={{ flex: 1, paddingBottom: FloatingTabBarInset + Theme.Spacing.md, justifyContent: "center", alignItems: "center", backgroundColor: Theme.Colors.surface }}>
       <Text style={{color: "white", fontSize: 36}}>Notes</Text>
     </View>
   );

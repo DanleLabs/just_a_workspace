@@ -9,7 +9,7 @@ import { useRef, useState } from 'react';
 import { IPopupMenu, PopupPosition } from '@/types/popupMenu.type';
 import { NAVIGATION } from '@/constants/data/navigation.data';
 import { Theme } from '@/constants/theme';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { workspacePopupAtom } from '@/state/state';
 
 export default function TabsLayout() {
@@ -20,7 +20,7 @@ export default function TabsLayout() {
 
   const [popupMenuArgs, setPopupMenuArgs] = useState<IPopupMenu>({
     elementRef: null,
-    height: 200,
+    height: 140,
     isOpen: false,
     items: WORKSPACE_POPUP,
     position: PopupPosition.BOTTOM,

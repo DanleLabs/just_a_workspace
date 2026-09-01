@@ -1,56 +1,129 @@
-# Welcome to your Expo app 👋
+# Jaw — The Monolithic Workspace for Students
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> **One app. Everything connected. Works offline.**
 
-## Get started
+Jaw is a local-first, all-in-one workspace designed for students. Tasks, timers, notes, and study tools — not in separate silos, but deeply linked together.
 
-1. Install dependencies
+Link a note inside a task. Attach a pomodoro to your assignment. Generate flashcards from your notes. It's one monolithic workspace where everything talks to everything.
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+### ✨ Preview
 
-   ```bash
-   npx expo start
-   ```
+> First video demo — smooth modern transitions + workspace popup picker
 
-In the output, you'll find options to open the app in a
+<p align="center">
+  <img src="./screenshots/preview.gif" width="280" alt="Jaw demo — transitions & workspace picker" />
+  <br />
+  <em>Smooth transitions & workspace popup picker</em>
+</p>
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+<details>
+<summary>📹 Watch raw video / see screenshots</summary>
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+[▶️ `screenshots/first-video.mp4`](./screenshots/first-video.mp4) · [GIF](./screenshots/preview.gif)
 
-## Get a fresh project
+| Todo preview | Header |
+| :---: | :---: |
+| <img src="./screenshots/todo-preview.png" width="220" alt="Todo preview" /> | <img src="./screenshots/header.jpg" width="220" alt="Header" /> |
 
-When you're ready, run:
+</details>
+
+---
+
+### Why Jaw?
+
+Most productivity apps force you to juggle 5 different tools: Todoist for tasks, Anki for flashcards, Notion for notes, a pomodoro app for focus... Context switching kills productivity.
+
+**Jaw fixes this with two principles:**
+
+**1. Local-First**
+Works 100% offline. No internet? No problem. Create tasks, write notes, run timers — everything works locally with SQLite. When you're back online, it syncs automatically (sync server with conflict resolution — WIP).
+
+**2. All-in-One, Deeply Integrated**
+It's not just 4 apps in one tab bar. Modules are linked on an entity level:
+
+- Link a `Note` inside a `Task` description
+- Attach a `Pomodoro Timer` to a `Task`
+- Attach files and cross-link any entity to any other
+- (Planned) Generate `Flashcards` directly from `Notes`
+
+One workspace. Zero context switching.
+
+---
+
+### 🧩 The 4 Modules
+
+| Module | What it does |
+| :--- | :--- |
+| **Todo / Planning** | Simple todo list by default. No complexity. Switch to **Calendar view** for curriculum, events, and repeatable tasks. |
+| **Time** | Time management with Pomodoro timers, linkable to any task. |
+| **Notes** | Fast-capture for ideas & knowledge. Attach files, link tasks/timers/other notes. |
+| **Study** | Anki / Quizlet-style flashcards, interactive tests & games, with integrated AI. |
+
+---
+
+### 🛠️ Tech Stack
+
+- **React Native + Expo** `~57.0.10` (Expo Router, Dev Client)
+- **TypeScript**
+- **Reanimated 4** + Gesture Handler + Worklets — for fluid animations
+- **SQLite + Drizzle ORM** — local-first persistence
+- **Jotai** — minimal state management
+- **Design inspo:** Telegram — for its brilliant UX/UI and engineering
+
+Check `package.json` and `app.json` for the full setup.
+
+---
+
+### 🚀 Getting Started
 
 ```bash
-npm run reset-project
+# 1. Install dependencies
+npm install
+# or
+bun install
+
+# 2. Start the dev server
+npx expo start
+
+# 3. Run on device
+npx expo run:android
+npx expo run:ios
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Open in:
+- [Development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go) (limited sandbox)
 
-### Other setup steps
+> Requires Expo SDK 57. Read the [versioned docs](https://docs.expo.dev/versions/v57.0.0/) before writing code.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+---
 
-## Learn more
+### 🗺️ Roadmap
 
-To learn more about developing your project with Expo, look at the following resources:
+- [x] Smooth transitions & workspace picker
+- [x] Todo list foundation
+- [ ] Complete SQLite integration (Drizzle)
+- [ ] Fully local usable release
+- [ ] Sync server — synchronization + conflict resolution
+- [ ] Multi-user & public workspaces
+- [ ] Live-editing for tasks, notes, timers
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+### 🎨 Design Feedback Wanted
 
-Join our community of developers creating universal apps.
+I'm a developer, not a designer. If you have ideas on how to make Jaw more user-friendly and responsive, please open an issue or discussion — I'd love to hear it!
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+### 📄 License
+
+Private WIP. More info soon.
+
+---
+
+<p align="center">Built with ❤️ — more devlogs coming soon!</p>

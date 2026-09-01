@@ -32,7 +32,7 @@ export default function Header({setPopupArgs}: {setPopupArgs: Dispatch<SetStateA
     setPopupArgs(prev => ({
       ...prev,
       elementRef: elementRef,
-      height: 200,
+      height: 160,
       isOpen: isOpenMenu,
       items: WORKSPACE_POPUP,
       position: PopupPosition.BOTTOM

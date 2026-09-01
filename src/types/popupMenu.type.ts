@@ -1,3 +1,5 @@
+import { workspacePopupAtom } from "@/state/state"
+import { useSetAtom } from "jotai"
 import { LucideIcon } from "lucide-react-native"
 
 export enum PopupPosition {
@@ -7,6 +9,8 @@ export enum PopupPosition {
   RIGHT = 'right'
 }
 
+type TSetIsOpen = ReturnType<typeof useSetAtom<typeof workspacePopupAtom>>
+
 export interface IPopupMenu {
   items: { title: string, Icon?: LucideIcon, fn: () => void }[],
   isOpen: boolean,
@@ -14,5 +18,5 @@ export interface IPopupMenu {
   width?: number,
   elementRef: React.Ref<any>
   position: PopupPosition
-  setIsOpen: (prev: boolean) => void
+  setIsOpen: TSetIsOpen
 }

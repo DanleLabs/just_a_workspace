@@ -1,3 +1,4 @@
+import { TaskPopup } from '@/components/todo/taskPopup';
 import { TodoList } from '@/components/todo/todoList';
 import AddButton from '@/components/ui/addButton';
 import { Theme } from '@/constants/theme';
@@ -12,6 +13,7 @@ export default function TodoScreen() {
 
   return (
     <View style={styles.page}>
+      <TaskPopup isOpen={false} />
       <TodoList taskData={data} />
       <AddButton onPress={() => { console.log('hello world') }}>
         <Plus size={Theme.Icons.sizeLg} strokeWidth={Theme.Icons.strokeWidth} color={Theme.Colors.textPrimary} />

@@ -4,30 +4,25 @@ import { CirclePlus } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Animated, {
-  Easing,
+  createAnimatedComponent,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
   withTiming,
 } from "react-native-reanimated";
 
-const PopupStyleConfig = {
-  margin: 15,
-  paddingVertical: 10,
-  iconSize: Theme.Icons.sizeMd,
-}
+const AnimatedBg = createAnimatedComponent(Pressable)
 
 export default function PopupMenu({
   items,
   width,
-  elementRef,
-  position,
   isOpen,
   height,
   setIsOpen,
 }: IPopupMenu) {
 
+  const animatedBackground = useSharedValue(0)
   const animatedOpacity = useSharedValue(0);
+  const animatedBgOpacity = useSharedValue(0)
   const animatedTranslateY = useSharedValue(0);
   const display = useSharedValue<"none" | "flex" | "contents" | undefined>('none')
 
@@ -36,6 +31,10 @@ export default function PopupMenu({
     transform: [{ translateY: animatedTranslateY.value }],
     display: display.value
   }));
+  const bgAnimatedStyles = useAnimatedStyle(() => ({
+    opacity: animatedBgOpacity.value,
+    display: display.value
+  }))
 
   const isScrollbar = items.length > 4
   const [timerId, setTimerId] = useState<number | null>(null)
@@ -46,11 +45,13 @@ export default function PopupMenu({
         clearTimeout(timerId)
       }
       display.value = 'flex'
+      animatedBgOpacity.value = withTiming(0.4, {duration: 1000})
       animatedTranslateY.value = withTiming(0, {duration: 180})
       animatedOpacity.value = withTiming(1, { duration: 180 });
     } else {
       animatedTranslateY.value = withTiming(-10, { duration: 120 });
       animatedOpacity.value = withTiming(0, { duration: 120 });
+      animatedBgOpacity.value = withTiming(0.3, {duration: 120})
       const timerId = setTimeout(() => { display.value = 'none' }, 120)
       setTimerId(timerId)
     }
@@ -58,7 +59,7 @@ export default function PopupMenu({
 
   return (
     <View>
-      <Pressable style={[styles.pressable, {display: isOpen ? 'flex' : 'none'}]} onPress={() => setIsOpen(prev => !prev)}></Pressable>
+      <AnimatedBg style={[styles.pressable, bgAnimatedStyles]} onPress={() => setIsOpen(prev => !prev)}></AnimatedBg>
       <Animated.View
         style={[
           styles.menu,
