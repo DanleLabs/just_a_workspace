@@ -10,7 +10,7 @@ interface IAddButton extends PropsWithChildren {
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export default function AddButton(props: IAddButton) {
+export default function AddButton({onPress, children}: IAddButton) {
 
   const scale = useSharedValue(1)
   const opacity = useSharedValue(1)
@@ -30,6 +30,7 @@ export default function AddButton(props: IAddButton) {
   }
 
   const handlePressOut = () => {
+    onPress()
     scale.value = withSpring(1, {
       damping: 70,
       stiffness: 1400
@@ -41,7 +42,7 @@ export default function AddButton(props: IAddButton) {
 
   return (
     <AnimatedPressable onPressIn={handlePressIn} onPressOut={handlePressOut} style={[styles.button, animatedStyle]}>
-      {props.children}
+      {children}
     </AnimatedPressable>
   )
 }

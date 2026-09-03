@@ -5,18 +5,27 @@ import AppTabs from '@/components/app-tabs';
 import Header from '@/components/header';
 import { WORKSPACE_POPUP } from '@/mock-data/popup.data';
 import PopupMenu from '@/components/ui/popupMenu';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IPopupMenu, PopupPosition } from '@/types/popupMenu.type';
 import { NAVIGATION } from '@/constants/data/navigation.data';
 import { Theme } from '@/constants/theme';
 import { useAtom, useSetAtom } from 'jotai';
-import { workspacePopupAtom } from '@/state/state';
+import { taskDataAtom, workspacePopupAtom } from '@/state/state';
+import AddTodoPopup from '@/components/todo/addTodoPopup';
+import { TaskManager } from '@/db/tasksManager';
 
 export default function TabsLayout() {
 
   const testRef = useRef<View>(null)
 
   const [isOpen, setIsOpen] = useAtom(workspacePopupAtom)
+  const setTodoData = useSetAtom(taskDataAtom)
+  useEffect(() => {
+    TaskManager.getTasks().then((result) => {
+      setTodoData(result)
+    }
+    ).catch((err) => console.error(err))
+  })
 
   const [popupMenuArgs, setPopupMenuArgs] = useState<IPopupMenu>({
     elementRef: null,
@@ -29,6 +38,7 @@ export default function TabsLayout() {
 
   return (
     <View ref={testRef} style={styles.container}>
+      <AddTodoPopup />
       <PopupMenu setIsOpen={setIsOpen} elementRef={popupMenuArgs.elementRef} height={popupMenuArgs.height} isOpen={isOpen} items={popupMenuArgs.items} position={popupMenuArgs.position} />
       <Header setPopupArgs={
         setPopupMenuArgs

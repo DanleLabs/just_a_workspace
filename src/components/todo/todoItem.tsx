@@ -1,23 +1,30 @@
 import { Theme } from "@/constants/theme";
-import { ITaskData } from "@/types/todoItem.type";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import CheckBox from "../ui/checkbox";
-import { useState } from "react";
 import { useAtom } from "jotai";
 import { taskDataAtom } from "@/state/state";
+import { Task } from "../../../db/schema";
+import { useTodo } from "@/hooks/use-tasks";
 
-export default function TodoItem({ taskText, isDone, id, priority   }: ITaskData) {
+export default function TodoItem({ title, isDone, id, priority, description   }: Task) {
 
+  const {toggleTodo, removeTodo} = useTodo()
   const [, setData] = useAtom(taskDataAtom)
 
   return (
     <View style={styles.todoItem}>
-      <CheckBox size={Theme.Icons.sizeMd + Theme.Spacing.sm} isChecked={isDone} onChange={() => {
-          setData((prev) =>
-            prev.map((item) => (item.id === id ? { ...item, isDone: !item.isDone } : item)),
-          )
-        }} />
-      <Text style={styles.text}>{ taskText }</Text>
+      <CheckBox
+        size={Theme.Icons.sizeMd + Theme.Spacing.sm}
+        isChecked={isDone || false}
+        onChange={() => toggleTodo(id)} />
+      <Pressable onPress={() => removeTodo(id)}>
+        <Text
+          style={
+            [styles.text,
+              { color: isDone ? Theme.Colors.textSecondary : Theme.Colors.textPrimary }
+            ]
+          }>{title}</Text>
+      </Pressable>
     </View>
   )
 }
@@ -29,7 +36,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: Theme.Colors.contrast,
     fontSize: Theme.Typography.sizes.lg.fontSize,
     lineHeight: Theme.Typography.sizes.lg.lineHeight,
     fontFamily: Theme.Typography.families.regular,

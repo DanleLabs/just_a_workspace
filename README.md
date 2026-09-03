@@ -2,7 +2,7 @@
 
 > **One app. Everything connected. Works offline.**
 
-Jaw is a local-first, all-in-one workspace designed for students. Tasks, timers, notes, and study tools — not in separate silos, but deeply linked together.
+Jaw is a local-first, all-in-one workspace designed for students. Tasks, timers, notes, and study tools, not in separate silos, but deeply linked together.
 
 Link a note inside a task. Attach a pomodoro to your assignment. Generate flashcards from your notes. It's one monolithic workspace where everything talks to everything.
 
@@ -20,6 +20,10 @@ Link a note inside a task. Attach a pomodoro to your assignment. Generate flashc
 
 <details>
 <summary>📹 Watch raw video / see screenshots</summary>
+
+<p align="center">
+  <video src="./screenshots/first-video.mp4" width="300" controls muted loop playsinline></video>
+</p>
 
 [▶️ `screenshots/first-video.mp4`](./screenshots/first-video.mp4) · [GIF](./screenshots/preview.gif)
 
@@ -42,7 +46,6 @@ Works 100% offline. No internet? No problem. Create tasks, write notes, run time
 
 **2. All-in-One, Deeply Integrated**
 It's not just 4 apps in one tab bar. Modules are linked on an entity level:
-
 - Link a `Note` inside a `Task` description
 - Attach a `Pomodoro Timer` to a `Task`
 - Attach files and cross-link any entity to any other

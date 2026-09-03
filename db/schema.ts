@@ -2,7 +2,7 @@ import {sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
 import { TaskPriority } from './types/taskPriority.enum'
 
 export const tasks = sqliteTable('tasks', {
-  id: text('id').primaryKey().default(crypto.randomUUID()),
+  id: text('id').primaryKey(),
   title: text('title').notNull(),
   description: text('description'),
   priority: text('priority', {

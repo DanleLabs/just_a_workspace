@@ -45,7 +45,7 @@ export default function PopupMenu({
         clearTimeout(timerId)
       }
       display.value = 'flex'
-      animatedBgOpacity.value = withTiming(0.4, {duration: 1000})
+      animatedBgOpacity.value = withTiming(0.4, {duration: 180})
       animatedTranslateY.value = withTiming(0, {duration: 180})
       animatedOpacity.value = withTiming(1, { duration: 180 });
     } else {
@@ -136,6 +136,5 @@ const styles = StyleSheet.create({
     width: 1000,
     zIndex: 19,
     backgroundColor: Theme.Colors.background,
-    opacity: 0.2,
   }
 });
