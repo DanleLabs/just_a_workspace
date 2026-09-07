@@ -1,3 +1,4 @@
+import Backdrop from '@/components/ui/backdrop';
 import '@/global.css';
 
 import { Platform } from 'react-native';
@@ -103,6 +104,11 @@ export const Theme = {
       iconStrokeWidth: 2.5,
     },
   },
+
+  ZPlacing: {
+    popup: 20,
+    backdrop: 19
+  }
 } as const;
 
 export type AppTheme = typeof Theme;

@@ -1,10 +1,13 @@
 import { TaskManager } from "@/db/tasksManager";
 import { db } from "../../db/client";
+import { WorkspaceManager } from "@/db/workspaceManager";
 
 export enum QueueTaskType {
   CREATE_TASK = 'create-task',
   UPDATE_TASK = 'update-task',
   DELETE_TASK = 'delete-task',
+  CREATE_WORKSPACE = 'create-workspace',
+  UDATE_WORKSPACE = 'update-workspace'
 }
 
 export type PendingTask<T> = {
@@ -60,6 +63,10 @@ class SyncService {
       case QueueTaskType.DELETE_TASK:
         await TaskManager.removeTask(task.payload)
         console.log('Task: ', task.id, ' removed. TIMESTAMP: ', Date.now())
+        break;
+      case QueueTaskType.CREATE_WORKSPACE:
+        await WorkspaceManager.createWorkspace(task.payload)
+        console.log('Workspace: ', task.id, ' created. TIMESTAMP: ', Date.now())
         break;
       }
   }

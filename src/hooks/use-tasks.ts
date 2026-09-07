@@ -3,9 +3,12 @@ import { PendingTask, QueueTaskType, syncService } from "@/sync/sync.service"
 import { useAtom } from "jotai"
 import * as crypto from 'expo-crypto'
 import { Task } from "../../db/schema"
+import { TaskManager } from "@/db/tasksManager"
+import { useLocalSearchParams } from "expo-router"
 
 export const useTodo = () => {
   const [todoData, setTodoData] = useAtom(taskDataAtom)
+  const {workspace} = useLocalSearchParams()
 
   const createTodo = (todo: Omit<Task, 'id'>) => {
     setTodoData(prev => [...prev, {...todo, id: crypto.randomUUID()}])
@@ -50,7 +53,10 @@ export const useTodo = () => {
     })
   }
 
+  const loadTodos = async (workspaceId?: string) => {
+    const todos = await TaskManager.getTasksFromWorkspace(workspaceId || workspace[0])
+    setTodoData(todos || [])
+  }
 
-
-  return { createTodo, toggleTodo, removeTodo }
+  return { createTodo, toggleTodo, removeTodo, loadTodos }
 }

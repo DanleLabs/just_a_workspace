@@ -1,4 +1,4 @@
-package com.anonymous.jarvis_app
+package com.anonymous.jaw
 
 import android.app.Application
 import android.content.res.Configuration

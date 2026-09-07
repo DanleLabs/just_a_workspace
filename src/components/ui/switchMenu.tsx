@@ -56,7 +56,7 @@ export default function SwitchMenu({ items }: ISwitchMenu) {
         <Pressable
           key={item.id}
           onLayout={(e) => handleLayout(item.id, e)}
-          onPress={() => setActiveId(item.id)}
+          onPressIn={() => setActiveId(item.id)}
           style={styles.button}
         >
           <Text style={[styles.text, {color: activeId === item.id ? Theme.Colors.accent : Theme.Colors.textSecondary}]}>{item.title}</Text>

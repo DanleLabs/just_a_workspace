@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm"
 import { db } from "../../db/client"
-import { CreateTask, Task, tasks } from "../../db/schema"
+import { CreateTask, Task, tasks, workspaces } from "../../db/schema"
 
  export const TaskManager = {
   getTasks: async (): Promise<Task[]> => {
@@ -30,12 +30,12 @@ import { CreateTask, Task, tasks } from "../../db/schema"
     }
   },
 
-  updateTask: async (id: string, payload: Partial<CreateTask>): Promise<Task | null>  => {
+  updateTask: async (taskId: string, payload: Partial<CreateTask>): Promise<Task | null>  => {
     try {
       const [newTask] = await db
         .update(tasks)
         .set(payload)
-        .where(eq(tasks.id, id))
+        .where(eq(tasks.id, taskId))
         .returning()
 
       return newTask ?? null
@@ -45,13 +45,25 @@ import { CreateTask, Task, tasks } from "../../db/schema"
     }
   },
 
-  removeTask: async (id: string): Promise<Task | null> => {
+  removeTask: async (taskId: string): Promise<Task | null> => {
     try {
-      const [task] = await db.delete(tasks).where(eq(tasks.id, id)).returning()
+      const [task] = await db.delete(tasks).where(eq(tasks.id, taskId)).returning()
       return task ?? null
     } catch (err) {
       console.error('Error while deleting the task.')
       throw err
     }
+  },
+
+   getTasksFromWorkspace: async (workspaceId: string): Promise<Task[] | null> => {
+     const workspace = await db.query.workspaces.findFirst({
+       where: eq(workspaces.id, workspaceId),
+       with: {
+         tasks: true,
+       }
+     })
+     if (!workspace) return null
+
+     return workspace.tasks
   }
 }

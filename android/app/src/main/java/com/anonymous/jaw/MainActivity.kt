@@ -1,4 +1,4 @@
-package com.anonymous.jarvis_app
+package com.anonymous.jaw
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

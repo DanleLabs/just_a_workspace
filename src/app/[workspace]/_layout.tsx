@@ -13,6 +13,8 @@ import { useAtom, useSetAtom } from 'jotai';
 import { taskDataAtom, workspacePopupAtom } from '@/state/state';
 import AddTodoPopup from '@/components/todo/addTodoPopup';
 import { TaskManager } from '@/db/tasksManager';
+import { TodoPopup } from '@/components/todo/todoPopup';
+import Backdrop from '@/components/ui/backdrop';
 
 export default function TabsLayout() {
 
@@ -25,7 +27,7 @@ export default function TabsLayout() {
       setTodoData(result)
     }
     ).catch((err) => console.error(err))
-  })
+    }, [])
 
   const [popupMenuArgs, setPopupMenuArgs] = useState<IPopupMenu>({
     elementRef: null,
@@ -39,6 +41,7 @@ export default function TabsLayout() {
   return (
     <View ref={testRef} style={styles.container}>
       <AddTodoPopup />
+      <TodoPopup />
       <PopupMenu setIsOpen={setIsOpen} elementRef={popupMenuArgs.elementRef} height={popupMenuArgs.height} isOpen={isOpen} items={popupMenuArgs.items} position={popupMenuArgs.position} />
       <Header setPopupArgs={
         setPopupMenuArgs

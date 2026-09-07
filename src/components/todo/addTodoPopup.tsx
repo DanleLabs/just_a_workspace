@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { createAnimatedComponent, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useTodo } from "@/hooks/use-tasks";
+import Backdrop from "../ui/backdrop";
+import { useLocalSearchParams } from "expo-router";
 
 const AnimatedPopup = createAnimatedComponent(View)
 const AnimatedPressable = createAnimatedComponent(Pressable)
@@ -12,7 +14,7 @@ const AnimatedPressable = createAnimatedComponent(Pressable)
 export default function AddTodoPopup() {
 
   const [isOpen, setIsOpen] = useAtom(isOpenAddTodoPopupAtom)
-  const [data, setTaskData] = useAtom(taskDataAtom)
+  const { workspace } = useLocalSearchParams<{ workspace: string }>()
 
   const {createTodo} = useTodo()
 
@@ -26,10 +28,6 @@ export default function AddTodoPopup() {
     transform: [{ translateY: animatedTranslateY.value }],
     display: display.value
   }));
-  const bgAnimatedStyles = useAnimatedStyle(() => ({
-    opacity: animatedBgOpacity.value,
-    display: display.value
-  }))
 
   const handlePressAddTask = () => {
     if (text === '') return
@@ -41,6 +39,7 @@ export default function AddTodoPopup() {
       description: null,
       isDone: null,
       priority: null,
+      workspaceId: workspace
     })
   }
 
@@ -66,27 +65,25 @@ export default function AddTodoPopup() {
   }, [isOpen]);
 
   return (
-    <View style={styles.view}>
-      <AnimatedPressable style={[styles.bg, bgAnimatedStyles]} onPress={() => { setIsOpen(false); Keyboard.dismiss(); setText('')}}>
-      </AnimatedPressable>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
-      >
-        <AnimatedPopup style={[styles.popup, popupAnimatedStyles]}>
-          <Text style={styles.title}>Create Task</Text>
-          <TextInput
-            style={styles.input}
-            value={text}
-            onChangeText={setText}
-            placeholder="Task..."
-            placeholderTextColor={Theme.Colors.textSecondary}
-          />
-          <Pressable style={styles.button} onPress={handlePressAddTask}>
-            <Text style={styles.buttonLabel}>Save</Text>
-          </Pressable>
-        </AnimatedPopup>
-      </KeyboardAvoidingView>
-    </View>
+    <Backdrop pageStyle={{justifyContent: 'center'}} isOpen={isOpen} onClick={() => setIsOpen(false)}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
+        >
+          <AnimatedPopup style={[styles.popup, popupAnimatedStyles]}>
+            <Text style={styles.title}>Create Task</Text>
+            <TextInput
+              style={styles.input}
+              value={text}
+              onChangeText={setText}
+              placeholder="Task..."
+              placeholderTextColor={Theme.Colors.textSecondary}
+            />
+            <Pressable style={styles.button} onPress={handlePressAddTask}>
+              <Text style={styles.buttonLabel}>Save</Text>
+            </Pressable>
+          </AnimatedPopup>
+        </KeyboardAvoidingView>
+      </Backdrop>
 
   )
 }
@@ -110,6 +107,7 @@ const styles = StyleSheet.create({
     zIndex: 20,
     width: 270,
     height: 120,
+    alignSelf: 'center',
   },
   input: {
     padding: Theme.Spacing.md,
