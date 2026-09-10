@@ -1,26 +1,27 @@
 import { View } from "react-native";
 import TodoItem from "./todoItem";
 import { useAtomValue } from "jotai";
-import { taskDataAtom } from "@/state/state";
+import { activeWorkspace, taskDataAtom } from "@/state/state";
 import { Theme } from "@/constants/theme";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTodo } from "@/hooks/use-tasks";
 import { useLocalSearchParams } from "expo-router";
+import { Loader } from "lucide-react-native";
 
 
 export function TodoList() {
 
-  const { workspace } = useLocalSearchParams()
-  const {loadTodos} = useTodo()
+  const { loadTodos } = useTodo()
+  const currentWorkspace = useAtomValue(activeWorkspace)
   useEffect(() => {
     loadTodos()
-  }, [workspace])
+  }, [currentWorkspace])
   const data = useAtomValue(taskDataAtom)
 
   return (
     <View style={{
       width: '100%',
-      paddingHorizontal: Theme.Spacing.md
+      paddingHorizontal: Theme.Spacing.lg
     }}>
       {
         data.map((item, i) => {

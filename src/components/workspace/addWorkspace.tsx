@@ -1,62 +1,44 @@
 import { Theme } from "@/constants/theme";
-import { activeWorkspace, isOpenAddTodoPopupAtom } from "@/state/state";
-import { useAtom } from "jotai";
-import { useEffect, useRef, useState } from "react";
-import { Keyboard, Pressable, StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
-import { createAnimatedComponent, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { useTodo } from "@/hooks/use-tasks";
+import { WorkspaceManager } from "@/db/workspaceManager";
+import { Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import Backdrop from "../ui/backdrop";
+import { createAnimatedComponent, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { useAtom } from "jotai";
 import { useLocalSearchParams } from "expo-router";
-import { useKeyboardOffset } from "@/hooks/use-keyboard-offset";
+import { isOpenAddWorkspacePopup } from "@/state/state";
+import { useWorkspace } from "@/hooks/use-workspace";
+import { useEffect, useState } from "react";
 
 const AnimatedPopup = createAnimatedComponent(View)
 
-export default function AddTodoPopup() {
-
-  const {height: SCREEN_HEIGHT} = useWindowDimensions()
-  const keyboardOffset = useKeyboardOffset(SCREEN_HEIGHT)
-
-  const inputRef = useRef<TextInput>(null)
-
-  const [isOpen, setIsOpen] = useAtom(isOpenAddTodoPopupAtom)
+export default function AddWorkspace() {
+  const [isOpen, setIsOpen] = useAtom(isOpenAddWorkspacePopup)
   const { workspace } = useLocalSearchParams<{ workspace: string }>()
 
-  const {createTodo} = useTodo()
+  const {createWorkspace} = useWorkspace()
 
   const animatedOpacity = useSharedValue(0);
   const animatedBgOpacity = useSharedValue(0)
   const animatedTranslateY = useSharedValue(0);
   const display = useSharedValue<"none" | "flex" | "contents" | undefined>('none')
-  const [currentWorkspace, setCurrentWorkspace] = useAtom(activeWorkspace)
 
   const popupAnimatedStyles = useAnimatedStyle(() => ({
     opacity: animatedOpacity.value,
-    transform: [{
-      translateY: animatedTranslateY.value - (keyboardOffset.value !== 0
-        ? keyboardOffset.value + Theme.Spacing.lg
-        : 0)
-    }],
+    transform: [{ translateY: animatedTranslateY.value }],
     display: display.value
   }));
 
-  const handlePressAddTask = () => {
+  const handlePress = () => {
     if (text === '') return
     Keyboard.dismiss()
     setIsOpen(false)
     setText('')
-    createTodo({
-      title: text,
-      description: null,
-      isDone: null,
-      priority: null,
-      workspaceId: currentWorkspace!.id,
-      createdAt: null,
-      updatedAt: null,
+    createWorkspace({
+      title: text
     })
   }
 
   const [text, setText] = useState('')
-  const [timerId, setTimerId] = useState<number | null>(null)
 
   useEffect(() => {
     if (isOpen) {
@@ -64,14 +46,14 @@ export default function AddTodoPopup() {
       animatedBgOpacity.value = withTiming(0.4, {duration: 180})
       animatedTranslateY.value = withTiming(0, {duration: 180})
       animatedOpacity.value = withTiming(1, { duration: 180 });
-      const focusTimer = setTimeout(() => { inputRef.current?.focus() }, 20)
-      return () => clearTimeout(focusTimer)
     } else {
-      animatedTranslateY.value = withTiming(15, { duration: 120 });
+      animatedTranslateY.value = withTiming(-10, { duration: 120 });
       animatedOpacity.value = withTiming(0, { duration: 120 });
-      animatedBgOpacity.value = withTiming(0.3, { duration: 120 },
-        (finished) => {if (finished) display.value = 'none' }
-      )
+      animatedBgOpacity.value = withTiming(0.3, { duration: 120 }, (finished) => {
+        if (finished) {
+          display.value = 'none'
+        }
+      })
     }
   }, [isOpen]);
 
@@ -80,20 +62,23 @@ export default function AddTodoPopup() {
       Keyboard.dismiss()
       setIsOpen(false)
     }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
+        >
           <AnimatedPopup style={[styles.popup, popupAnimatedStyles]}>
-            <Text style={styles.title}>Create Task</Text>
-        <TextInput
-          ref={inputRef}
+            <Text style={styles.title}>Create Workspace</Text>
+            <TextInput
               style={styles.input}
               value={text}
               onChangeText={setText}
-              placeholder="Task..."
+              placeholder="Workspace..."
               placeholderTextColor={Theme.Colors.textSecondary}
             />
-            <Pressable style={styles.button} onPress={handlePressAddTask}>
+            <Pressable style={styles.button} onPress={handlePress}>
               <Text style={styles.buttonLabel}>Save</Text>
             </Pressable>
           </AnimatedPopup>
+        </KeyboardAvoidingView>
       </Backdrop>
 
   )
@@ -116,18 +101,16 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.Colors.popup,
     borderRadius: Theme.Radii.lg,
     zIndex: 20,
-    position: 'absolute',
-    right: Theme.Spacing.lg,
-    left: Theme.Spacing.lg,
-    bottom: Theme.Spacing.lg,
-    height: 135,
+    width: 270,
+    height: 120,
+    alignSelf: 'center',
   },
   input: {
     padding: Theme.Spacing.md,
     borderRadius: Theme.Radii.lg,
     color: Theme.Colors.textPrimary,
-    fontSize: Theme.Typography.sizes.lg.fontSize,
-    lineHeight: Theme.Typography.sizes.lg.lineHeight,
+    fontSize: Theme.Typography.sizes.md.fontSize,
+    lineHeight: Theme.Typography.sizes.md.lineHeight,
   },
   title: {
     color: Theme.Colors.textPrimary,

@@ -1,6 +1,6 @@
-import { taskDataAtom } from "@/state/state"
+import { activeWorkspace, taskDataAtom } from "@/state/state"
 import { PendingTask, QueueTaskType, syncService } from "@/sync/sync.service"
-import { useAtom } from "jotai"
+import { useAtom, useAtomValue } from "jotai"
 import * as crypto from 'expo-crypto'
 import { Task } from "../../db/schema"
 import { TaskManager } from "@/db/tasksManager"
@@ -8,10 +8,22 @@ import { useLocalSearchParams } from "expo-router"
 
 export const useTodo = () => {
   const [todoData, setTodoData] = useAtom(taskDataAtom)
-  const {workspace} = useLocalSearchParams()
+  const currentWorkspace = useAtomValue(activeWorkspace)
+  const syncTodo = async () => {
+    setTimeout(async () => {
+      const data = await TaskManager.getTasksFromWorkspace(currentWorkspace!.id)
+      if (!data) {
+        setTodoData([])
+        return
+      }
+      setTodoData(data)
+      console.log('Todo are in sync now. ', Date.now())
+    }, 800)
+  }
 
   const createTodo = (todo: Omit<Task, 'id'>) => {
-    setTodoData(prev => [...prev, {...todo, id: crypto.randomUUID()}])
+    setTodoData(prev => [...prev, { ...todo, id: crypto.randomUUID() }])
+    console.log(todo)
     syncService.enqueue<Task>({
       id: crypto.randomUUID(),
       type: QueueTaskType.CREATE_TASK,
@@ -20,6 +32,7 @@ export const useTodo = () => {
         id: crypto.randomUUID()
       },
     })
+    syncTodo()
   }
 
   const toggleTodo = (id: string) => {
@@ -42,6 +55,7 @@ export const useTodo = () => {
     };
 
     syncService.enqueue(queueTask);
+    syncTodo()
   }
 
   const removeTodo = (id: string) => {
@@ -51,11 +65,13 @@ export const useTodo = () => {
       type: QueueTaskType.DELETE_TASK,
       payload: id
     })
+    syncTodo()
   }
 
   const loadTodos = async (workspaceId?: string) => {
-    const todos = await TaskManager.getTasksFromWorkspace(workspaceId || workspace[0])
-    setTodoData(todos || [])
+    if (!currentWorkspace) return
+    const todos = await TaskManager.getTasksFromWorkspace(workspaceId ?? currentWorkspace!.id)
+    setTodoData(todos ?? [])
   }
 
   return { createTodo, toggleTodo, removeTodo, loadTodos }

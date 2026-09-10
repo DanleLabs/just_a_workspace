@@ -3,20 +3,29 @@ import { ChevronDown, ChevronDownCircle, ChevronRight, CircleUserRound, UserRoun
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withSpring } from "react-native-reanimated";
-import PopupMenu from "./ui/popupMenu";
+import WorkspaceMenu from "./workspaceMenu/workspaceMenu";
 import { WORKSPACE_POPUP } from "@/mock-data/popup.data";
 import { IPopupMenu, PopupPosition } from "@/types/popupMenu.type";
 import SwitchMenu from "./ui/switchMenu";
-import { workspacePopupAtom } from "@/state/state";
-import { useAtom } from "jotai";
+import { activeWorkspace, isOpenAddWorkspacePopup, workspaceList, workspacePopupAtom } from "@/state/state";
+import { useAtom, useAtomValue } from "jotai";
+import { useLocalSearchParams } from "expo-router";
+import { Workspace } from "../../db/schema";
+import { usePopup } from "@/hooks/use-popup";
 
 const AnimatedView = Animated.createAnimatedComponent(View)
 
-export default function Header({setPopupArgs}: {setPopupArgs: Dispatch<SetStateAction<IPopupMenu>>}) {
+export default function Header() {
+
+  const {closePopup, showPopup} = usePopup()
 
   const elementRef = useRef(null)
 
   const [isOpenMenu, setIsOpenMenu] = useAtom(workspacePopupAtom)
+
+  const workspaces = useAtomValue(workspaceList)
+  const [currentWorkspace, setCurrentWorkspace] = useAtom(activeWorkspace)
+
 
   const rotation = useSharedValue(0)
   const animatedStyle = useAnimatedStyle(() => ({
@@ -29,15 +38,6 @@ export default function Header({setPopupArgs}: {setPopupArgs: Dispatch<SetStateA
 
   useEffect(() => {
 
-    setPopupArgs(prev => ({
-      ...prev,
-      elementRef: elementRef,
-      height: 160,
-      isOpen: isOpenMenu,
-      items: WORKSPACE_POPUP,
-      position: PopupPosition.BOTTOM
-    }))
-
     const targetRotation = isOpenMenu ? -180 : 0;
 
       rotation.value = withSpring(targetRotation, {
@@ -49,8 +49,30 @@ export default function Header({setPopupArgs}: {setPopupArgs: Dispatch<SetStateA
   return (
     <View ref={elementRef} style={[styles.header]}>
       <View style={styles.box}>
-        <Pressable onPress={handlePress} style={styles.workspaceBox}>
-          <Text style={styles.text}>Workspace</Text>
+        <Pressable onLongPress={() => {
+          showPopup({
+            items: [
+            {
+              title: 'Rename',
+              action: () => {}
+            },
+            {
+              title: 'Archive',
+              action: () => {}
+            },
+            {
+              title: 'Delete Folder',
+              action: () => {}
+            },
+            ],
+            position: {
+              left: 50,
+              top: 50,
+            },
+            backdropClick: () => closePopup()
+          })
+        }} onPress={handlePress} style={styles.workspaceBox}>
+          <Text style={styles.text}>{currentWorkspace?.title}</Text>
           <AnimatedView style={[animatedStyle]}>
             <ChevronDown size={Theme.Icons.sizeSm} strokeWidth={Theme.Icons.strokeWidth - 0.25} color={Theme.Colors.textSecondary}/>
           </AnimatedView>

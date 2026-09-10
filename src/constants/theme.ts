@@ -1,4 +1,3 @@
-import Backdrop from '@/components/ui/backdrop';
 import '@/global.css';
 
 import { Platform } from 'react-native';
@@ -16,7 +15,9 @@ export const Theme = {
   Colors: {
     // Brand & Interactive
     accent: '#2299F2',
+    // accent: '#0a9c81',
     selected: '#27353e',
+    popupOnClick: '#3d3d3d',
     contrast: '#f8f8f8',
     accentMuted: 'rgba(34, 153, 242, 0.15)', // Для фона выделенных элементов/чипсов
 
@@ -108,6 +109,13 @@ export const Theme = {
   ZPlacing: {
     popup: 20,
     backdrop: 19
+  },
+
+  Animations: {
+    Popup: {
+      openDurationMs: 180,
+      closeDurationMs: 120,
+    },
   }
 } as const;
 

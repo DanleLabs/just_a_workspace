@@ -15,6 +15,20 @@
       "when": 1788803793110,
       "tag": "0001_glorious_richard_fisk",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1788866195704,
+      "tag": "0002_opposite_tattoo",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1789046568308,
+      "tag": "0003_equal_senator_kelly",
+      "breakpoints": true
     }
   ]
 }

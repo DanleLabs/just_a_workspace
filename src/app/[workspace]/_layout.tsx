@@ -3,49 +3,62 @@ import { StyleSheet, View } from 'react-native';
 
 import AppTabs from '@/components/app-tabs';
 import Header from '@/components/header';
-import { WORKSPACE_POPUP } from '@/mock-data/popup.data';
-import PopupMenu from '@/components/ui/popupMenu';
 import { useEffect, useRef, useState } from 'react';
 import { IPopupMenu, PopupPosition } from '@/types/popupMenu.type';
 import { NAVIGATION } from '@/constants/data/navigation.data';
 import { Theme } from '@/constants/theme';
 import { useAtom, useSetAtom } from 'jotai';
-import { taskDataAtom, workspacePopupAtom } from '@/state/state';
+import { activeWorkspace, isOpenPopup, popupParams, taskDataAtom, workspaceList, workspacePopupAtom } from '@/state/state';
 import AddTodoPopup from '@/components/todo/addTodoPopup';
 import { TaskManager } from '@/db/tasksManager';
 import { TodoPopup } from '@/components/todo/todoPopup';
 import Backdrop from '@/components/ui/backdrop';
+import { useLocalSearchParams } from 'expo-router';
+import { WorkspaceManager } from '@/db/workspaceManager';
+import AddWorkspace from '@/components/workspace/addWorkspace';
+import { Workspace } from '../../../db/schema';
+import WorkspaceMenu from '@/components/workspaceMenu/workspaceMenu';
+import Popup from '@/components/ui/popup/popup';
 
 export default function TabsLayout() {
 
   const testRef = useRef<View>(null)
 
+  const [popupParam, setPopupParam] = useAtom(popupParams)
+  const [isOpenModal, setIsOpenModal] = useAtom(isOpenPopup)
+
   const [isOpen, setIsOpen] = useAtom(workspacePopupAtom)
+  const [workspaces, setWorkspaces] = useAtom(workspaceList)
+  const { workspace } = useLocalSearchParams<{ workspace: string }>()
+  const [popupData, setPopupData] = useState<Workspace[]>([])
+  const [currentWorkspace, setCurrentWorkspace] = useAtom(activeWorkspace)
+
   const setTodoData = useSetAtom(taskDataAtom)
   useEffect(() => {
-    TaskManager.getTasks().then((result) => {
-      setTodoData(result)
+    WorkspaceManager.getWorkspaceList().then((result) => {
+      if (!result?.length) {
+        setWorkspaces([])
+        return
+      }
+      const filteredWorkspaces = result.filter((item) => item.id !== currentWorkspace!.id)
+      setPopupData(filteredWorkspaces)
+    })
+    TaskManager.getTasksFromWorkspace(currentWorkspace!.id).then((result) => {
+      setTodoData(result ?? [])
     }
     ).catch((err) => console.error(err))
-    }, [])
-
-  const [popupMenuArgs, setPopupMenuArgs] = useState<IPopupMenu>({
-    elementRef: null,
-    height: 140,
-    isOpen: false,
-    items: WORKSPACE_POPUP,
-    position: PopupPosition.BOTTOM,
-    setIsOpen: setIsOpen,
-  })
+    }, [currentWorkspace])
 
   return (
     <View ref={testRef} style={styles.container}>
       <AddTodoPopup />
+      <AddWorkspace />
+      {popupParam && <Popup
+        {...popupParam}
+        isOpen={isOpenModal} />}
       <TodoPopup />
-      <PopupMenu setIsOpen={setIsOpen} elementRef={popupMenuArgs.elementRef} height={popupMenuArgs.height} isOpen={isOpen} items={popupMenuArgs.items} position={popupMenuArgs.position} />
-      <Header setPopupArgs={
-        setPopupMenuArgs
-      }></Header>
+      <WorkspaceMenu onItemClick={() => {}} setIsOpen={setIsOpen} isOpen={isOpen} items={popupData} />
+      <Header></Header>
       <TopTabs
         style={styles.topTabs}
         tabBarPosition="bottom"

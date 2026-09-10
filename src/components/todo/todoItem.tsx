@@ -5,8 +5,32 @@ import { useAtom, useSetAtom } from "jotai";
 import { currentTodoId, isOpenTodoModal, taskDataAtom } from "@/state/state";
 import { Task } from "../../../db/schema";
 import { useTodo } from "@/hooks/use-tasks";
+import { createAnimatedComponent, interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { useEffect } from "react";
 
-export default function TodoItem({ title, isDone, id, priority, description   }: Task) {
+const AnimatedText = createAnimatedComponent(Text)
+
+export default function TodoItem({ title, isDone, id, priority, description }: Omit<Task, 'createdAt' | 'updatedAt'>) {
+
+  const isPressed = useSharedValue(isDone ? 1 : 0)
+
+  const animatedTextBackground = useAnimatedStyle(() => {
+    return {
+      color: interpolateColor(
+        isPressed.value,
+        [0, 1],
+        [Theme.Colors.textPrimary, Theme.Colors.textSecondary]
+      )
+    }
+  })
+
+  useEffect(() => {
+    if (isDone) {
+      isPressed.value = withTiming(1, {duration: 100})
+    } else {
+      isPressed.value = withTiming(0, {duration: 100})
+    }
+  }, [isDone])
 
   const {toggleTodo, removeTodo} = useTodo()
   const [, setData] = useAtom(taskDataAtom)
@@ -15,7 +39,9 @@ export default function TodoItem({ title, isDone, id, priority, description   }:
 
   return (
     <Pressable
-      onPress={() => toggleTodo(id)}
+      onPress={() => {
+        toggleTodo(id)
+      }}
       onLongPress={() => { setCurrentId(id); setIsOpenTodoModal(true)}}
       delayLongPress={300}
       style={styles.todoItem}>
@@ -24,12 +50,10 @@ export default function TodoItem({ title, isDone, id, priority, description   }:
         isChecked={isDone || false}
         onChange={() => {}} />
       <View>
-        <Text
+        <AnimatedText
           style={
-            [styles.text,
-              { color: isDone ? Theme.Colors.textSecondary : Theme.Colors.textPrimary }
-            ]
-          }>{title}</Text>
+            [styles.text, animatedTextBackground]
+          }>{title}</AnimatedText>
       </View>
     </Pressable>
   )
@@ -42,6 +66,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     paddingVertical: Theme.Spacing.sm,
+    paddingRight: Theme.Spacing.lg,
   },
   text: {
     fontSize: Theme.Typography.sizes.lg.fontSize,

@@ -1,6 +1,7 @@
 import { workspacePopupAtom } from "@/state/state"
 import { useSetAtom } from "jotai"
 import { LucideIcon } from "lucide-react-native"
+import { Workspace } from "../../db/schema"
 
 export enum PopupPosition {
   BOTTOM = 'bottom',
@@ -12,11 +13,12 @@ export enum PopupPosition {
 type TSetIsOpen = ReturnType<typeof useSetAtom<typeof workspacePopupAtom>>
 
 export interface IPopupMenu {
-  items: { title: string, Icon?: LucideIcon, fn: () => void }[],
+  items: Workspace[],
   isOpen: boolean,
-  height: number,
+  height?: number,
   width?: number,
-  elementRef: React.Ref<any>
-  position: PopupPosition
-  setIsOpen: TSetIsOpen
+  elementRef?: React.Ref<any>
+  position?: PopupPosition
+  setIsOpen: TSetIsOpen,
+  onItemClick: () => void,
 }

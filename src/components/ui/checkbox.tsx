@@ -1,6 +1,6 @@
 import { Theme } from "@/constants/theme"
 import { Check, LucideIcon } from "lucide-react-native"
-import { Pressable, StyleSheet } from "react-native"
+import { Pressable, StyleSheet, View } from "react-native"
 
 interface ICheckBox {
   isChecked: boolean
@@ -11,9 +11,9 @@ interface ICheckBox {
 
 export default function CheckBox({ isChecked, onChange, Icon = Check, size = 24, }: ICheckBox) {
   return (
-    <Pressable style={[styles.box, {width: size, height: size, borderColor: isChecked ? Theme.Colors.accent : Theme.Colors.textSecondary,}]} onPress={() => onChange()}>
+    <View style={[styles.box, {width: size, height: size, borderColor: isChecked ? Theme.Colors.accent : Theme.Colors.textSecondary,}]}>
       {isChecked && <Icon color={Theme.Colors.accent} size={Theme.Icons.sizeMd} />}
-    </Pressable>
+    </View>
   )
 }
 

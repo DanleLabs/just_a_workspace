@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm"
 import { db } from "../../db/client"
 import { Workspace, workspaces } from "../../db/schema"
 
@@ -9,5 +10,13 @@ export const WorkspaceManager = {
   createWorkspace: async (data: Workspace): Promise<Workspace | null> => {
     const workspace = await db.insert(workspaces).values(data).returning()
     return workspace[0] || null
+  },
+
+  getWorkspaceById: async (id: string): Promise<Workspace | null> => {
+    const result = await db.query.workspaces.findMany({
+      where: eq(workspaces.id, id)
+    })
+    if (!result) return null
+    return result[0]
   }
 }
